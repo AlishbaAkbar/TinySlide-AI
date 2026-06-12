@@ -50,18 +50,24 @@ def make_slides(text):
     sentences = clean_sentences(text)
     title = generate_title(text)
 
+    grouped_content = {}
+
+    for sentence in sentences:
+        predicted_type = predict_content_type(sentence)
+
+        if predicted_type not in grouped_content:
+            grouped_content[predicted_type] = []
+
+        grouped_content[predicted_type].append(clean_bullet(sentence))
+
     slides = []
-    chunk_size = 3
 
-    for i in range(0, len(sentences), chunk_size):
-        chunk = sentences[i:i+chunk_size]
-        predicted_type = predict_content_type(" ".join(chunk))
-
+    for content_type, bullets in grouped_content.items():
         slide = {
-            "heading": generate_slide_heading(predicted_type),
-            "content_type": predicted_type,
-            "bullets": [clean_bullet(s) for s in chunk],
-            "layout": suggest_layout(chunk)
+            "heading": generate_slide_heading(content_type),
+            "content_type": content_type,
+            "bullets": bullets,
+            "layout": suggest_layout(bullets)
         }
 
         slides.append(slide)
