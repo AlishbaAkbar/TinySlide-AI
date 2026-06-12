@@ -20,12 +20,24 @@ def generate_title(text):
     words = text.split()
     return " ".join(words[:6]).title() if words else "Untitled Presentation"
 def generate_slide_heading(chunk):
-    first_sentence = chunk[0]
-    words = first_sentence.split()
+    text = " ".join(chunk).lower()
 
-    if len(words) <= 6:
-        return first_sentence.title()
+    if "benefit" in text or "advantage" in text:
+        return "Key Benefits"
 
+    if "problem" in text or "challenge" in text:
+        return "Problem Statement"
+
+    if "solution" in text or "solve" in text:
+        return "Proposed Solution"
+
+    if "example" in text:
+        return "Example"
+
+    if "process" in text or "step" in text:
+        return "Process Overview"
+
+    words = chunk[0].split()
     return " ".join(words[:6]).title()
 def make_slides(text):
     sentences = clean_sentences(text)
@@ -39,7 +51,7 @@ def make_slides(text):
 
         slide = {
             "heading": generate_slide_heading(chunk),
-            "bullets": chunk,
+            "bullets": [clean_bullet(s) for s in chunk],
             "layout": suggest_layout(chunk)
         }
 
@@ -49,6 +61,19 @@ def make_slides(text):
         "title": title,
         "slides": slides
     }
+def clean_bullet(sentence):
+    sentence = sentence.strip()
+
+    remove_words = ["basically", "actually", "very", "really"]
+    for word in remove_words:
+        sentence = sentence.replace(word, "")
+
+    sentence = sentence.strip()
+
+    if len(sentence) > 120:
+        sentence = sentence[:117] + "..."
+
+    return sentence[0].upper() + sentence[1:] if sentence else sentence
 def suggest_layout(chunk):
     bullet_count = len(chunk)
 
@@ -60,7 +85,6 @@ def suggest_layout(chunk):
 
     else:
         return "comparison"
-    
 def create_pptx(result):
     prs = Presentation()
 
