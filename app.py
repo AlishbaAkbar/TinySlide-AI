@@ -16,7 +16,14 @@ def clean_sentences(text):
 def generate_title(text):
     words = text.split()
     return " ".join(words[:6]).title() if words else "Untitled Presentation"
+def generate_slide_heading(chunk):
+    first_sentence = chunk[0]
+    words = first_sentence.split()
 
+    if len(words) <= 6:
+        return first_sentence.title()
+
+    return " ".join(words[:6]).title()
 def make_slides(text):
     sentences = clean_sentences(text)
     title = generate_title(text)
@@ -28,7 +35,7 @@ def make_slides(text):
         chunk = sentences[i:i+chunk_size]
 
         slide = {
-            "heading": f"Slide {len(slides)+1}",
+            "heading": generate_slide_heading(chunk),
             "bullets": chunk,
             "layout": "title_and_bullets"
         }
@@ -43,6 +50,14 @@ def make_slides(text):
 if st.button("Generate Slides"):
     if text.strip():
         result = make_slides(text)
+        json_data = json.dumps(result, indent=4)
+
+        st.download_button(
+            label="Download JSON",
+            data=json_data,
+            file_name="generated_slides.json",
+            mime="application/json"
+        )
 
         col1, col2 = st.columns(2)
 
@@ -62,3 +77,4 @@ if st.button("Generate Slides"):
 
     else:
         st.warning("Please enter some text.")
+        
