@@ -1,0 +1,20 @@
+TinySlide AI Model Evaluation Report
+====================================
+
+Accuracy: 100.0%
+
+Classification Report:
+              precision    recall  f1-score   support
+
+     benefit       1.00      1.00      1.00        30
+  comparison       1.00      1.00      1.00        30
+  definition       1.00      1.00      1.00        30
+     example       1.00      1.00      1.00        30
+     problem       1.00      1.00      1.00        30
+     process       1.00      1.00      1.00        30
+    solution       1.00      1.00      1.00        30
+   statistic       1.00      1.00      1.00        30
+
+    accuracy                           1.00       240
+   macro avg       1.00      1.00      1.00       240
+weighted avg       1.00      1.00      1.00       240

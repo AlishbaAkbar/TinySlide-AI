@@ -1,6 +1,9 @@
 import pandas as pd
 import joblib
+import os
+import time
 
+start_time = time.time()
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -8,7 +11,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 
 
-df = pd.read_csv("slide_training_data.csv")
+df = pd.read_csv("dataset/slide_training_data.csv")
 
 X = df["text"]
 y = df["label"]
@@ -42,7 +45,23 @@ print("Model Training Completed")
 print("Accuracy:", round(accuracy * 100, 2), "%")
 print("\nClassification Report:")
 print(classification_report(y_test, predictions))
+report = classification_report(y_test, predictions)
+
+with open("model_evaluation_report.txt", "w") as file:
+    file.write("TinySlide AI Model Evaluation Report\n")
+    file.write("====================================\n\n")
+    file.write(f"Accuracy: {round(accuracy * 100, 2)}%\n\n")
+    file.write("Classification Report:\n")
+    file.write(report)
 
 joblib.dump(model, "slide_classifier.pkl")
 
 print("\nModel saved as slide_classifier.pkl")
+
+
+size_mb = os.path.getsize("slide_classifier.pkl") / (1024 * 1024)
+
+print(f"\nModel Size: {size_mb:.4f} MB")
+training_time = time.time() - start_time
+
+print(f"Training Time: {training_time:.2f} seconds")
