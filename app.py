@@ -2,7 +2,6 @@ import streamlit as st
 import re
 import json
 from pptx import Presentation
-from pptx.util import Inches
 import io
 import joblib
 
@@ -20,26 +19,19 @@ def clean_sentences(text):
 def generate_title(text):
     words = text.split()
     return " ".join(words[:6]).title() if words else "Untitled Presentation"
-def generate_slide_heading(chunk):
-    text = " ".join(chunk).lower()
+def generate_slide_heading(content_type):
+    headings = {
+        "definition": "Definition",
+        "problem": "Problem Statement",
+        "solution": "Proposed Solution",
+        "benefit": "Key Benefits",
+        "process": "Process Overview",
+        "comparison": "Comparison",
+        "example": "Example",
+        "statistic": "Key Statistics"
+    }
 
-    if "benefit" in text or "advantage" in text:
-        return "Key Benefits"
-
-    if "problem" in text or "challenge" in text:
-        return "Problem Statement"
-
-    if "solution" in text or "solve" in text:
-        return "Proposed Solution"
-
-    if "example" in text:
-        return "Example"
-
-    if "process" in text or "step" in text:
-        return "Process Overview"
-
-    words = chunk[0].split()
-    return " ".join(words[:6]).title()
+    return headings.get(content_type, "Slide Overview")
 def make_slides(text):
     sentences = clean_sentences(text)
     title = generate_title(text)
@@ -52,7 +44,7 @@ def make_slides(text):
         predicted_type = predict_content_type(" ".join(chunk))
 
         slide = {
-            "heading": generate_slide_heading(chunk),
+            "heading": generate_slide_heading(predicted_type),
             "content_type": predicted_type,
             "bullets": [clean_bullet(s) for s in chunk],
             "layout": suggest_layout(chunk)
