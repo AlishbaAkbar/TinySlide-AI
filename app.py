@@ -4,9 +4,10 @@ import json
 from pptx import Presentation
 from pptx.util import Inches
 import io
+import joblib
 
 st.set_page_config(page_title="TinySlide AI", layout="wide")
-
+model = joblib.load("slide_classifier.pkl")
 st.title("TinySlide AI")
 st.subheader("Offline Text-to-Slide Generator")
 
@@ -48,9 +49,11 @@ def make_slides(text):
 
     for i in range(0, len(sentences), chunk_size):
         chunk = sentences[i:i+chunk_size]
+        predicted_type = predict_content_type(" ".join(chunk))
 
         slide = {
             "heading": generate_slide_heading(chunk),
+            "content_type": predicted_type,
             "bullets": [clean_bullet(s) for s in chunk],
             "layout": suggest_layout(chunk)
         }
@@ -85,6 +88,8 @@ def suggest_layout(chunk):
 
     else:
         return "comparison"
+def predict_content_type(sentence):
+    return model.predict([sentence])[0]
 def create_pptx(result):
     prs = Presentation()
 
