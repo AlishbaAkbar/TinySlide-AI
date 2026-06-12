@@ -40,7 +40,7 @@ def make_slides(text):
         slide = {
             "heading": generate_slide_heading(chunk),
             "bullets": chunk,
-            "layout": "title_and_bullets"
+            "layout": suggest_layout(chunk)
         }
 
         slides.append(slide)
@@ -49,6 +49,18 @@ def make_slides(text):
         "title": title,
         "slides": slides
     }
+def suggest_layout(chunk):
+    bullet_count = len(chunk)
+
+    if bullet_count <= 2:
+        return "title_and_content"
+
+    elif bullet_count <= 4:
+        return "two_column"
+
+    else:
+        return "comparison"
+    
 def create_pptx(result):
     prs = Presentation()
 
