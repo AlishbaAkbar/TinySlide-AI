@@ -3,13 +3,21 @@ import re
 import json
 from pptx import Presentation
 import io
-import joblib
+from slide_classifier import load_classifier
 
 st.set_page_config(page_title="TinySlide AI", layout="wide")
-model = joblib.load("slide_classifier.pkl")
+
+
+@st.cache_resource
+def get_model():
+    return load_classifier()
+
+
+model = get_model()
 st.title("TinySlide AI")
 st.subheader("Offline Text-to-Slide Generator")
 st.info(
+    f"Backend: {model.backend.upper()} | "
     "Model: TF-IDF + Logistic Regression | "
     "Size: 0.0377 MB | "
     "Accuracy: 100% synthetic + real-world test | "
@@ -38,11 +46,16 @@ def generate_slide_heading(content_type):
         "definition": "Definition",
         "problem": "Problem Statement",
         "solution": "Proposed Solution",
+        "architecture": "System Architecture",
+        "features": "Key Features",
+        "implementation": "Implementation Steps",
+        "strategy": "Rollout Strategy",
         "benefit": "Key Benefits",
         "process": "Process Overview",
         "comparison": "Comparison",
         "example": "Example",
-        "statistic": "Key Statistics"
+        "statistic": "Key Statistics",
+        "overview": "Topic Overview"
     }
 
     return headings.get(content_type, "Slide Overview")
@@ -100,8 +113,70 @@ def suggest_layout(chunk):
 
     else:
         return "comparison"
+def rule_based_content_type(sentence):
+    text = sentence.lower()
+
+    rules = [
+        ("implementation", [
+            "step-by-step", "implementing", "implementation", "requires",
+            "first", "second", "third", "method", "deploy"
+        ]),
+        ("benefit", [
+            "ultimately", "benefit", "benefits", "impact", "improves",
+            "reduces", "saves", "self-optimizing", "optimizing"
+        ]),
+        ("strategy", [
+            "strategy", "long-term plan", "plan", "phased rollout",
+            "rollout", "pilot zone", "scale", "phase"
+        ]),
+        ("architecture", [
+            "approach to building", "system relies", "integrating",
+            "iot sensors", "sensors", "predictive", "machine learning",
+            "architecture", "components"
+        ]),
+        ("features", [
+            "key features", "features", "include", "includes",
+            "adaptive", "dashboard", "alerts"
+        ]),
+        ("solution", [
+            "solution", "to solve", "solves", "transitioning",
+            "automates", "proposed"
+        ]),
+        ("comparison", [
+            "compared", "unlike", "whereas", "while", "than"
+        ]),
+        ("example", [
+            "for example", "for instance", "use case"
+        ]),
+        ("statistic", [
+            "percent", "%", "accuracy", "latency", "metric", "data"
+        ]),
+        ("problem", [
+            "problem", "challenge", "issue", "gridlock", "bottleneck",
+            "congestion", "chaotic"
+        ]),
+        ("definition", [
+            " is a ", " refers to ", " means ", " defined as "
+        ])
+    ]
+
+    for content_type, keywords in rules:
+        if any(keyword in text for keyword in keywords):
+            return content_type
+
+    return None
 def predict_content_type(sentence):
-    return model.predict([sentence])[0]
+    rule_prediction = rule_based_content_type(sentence)
+
+    if rule_prediction:
+        return rule_prediction
+
+    model_prediction = model.predict([sentence])[0]
+
+    if model_prediction == "definition":
+        return "overview"
+
+    return model_prediction
 def create_pptx(result):
     prs = Presentation()
 

@@ -1,0 +1,11 @@
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+dist/
+wheelhouse/
+*.pyc
+android_app/.gradle/
+android_app/local.properties
+android_app/app/build/
+android_app/build/

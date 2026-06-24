@@ -1,9 +1,6 @@
 joblib
 numpy
-onnx
 onnxruntime
-pandas
 python-pptx
 scikit-learn
-skl2onnx
 streamlit

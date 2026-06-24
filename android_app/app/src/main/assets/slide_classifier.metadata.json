@@ -1,0 +1,25 @@
+{
+  "name": "TinySlide AI slide classifier",
+  "source_model": "slide_classifier.pkl",
+  "onnx_model": "models\\slide_classifier.onnx",
+  "backend": "onnxruntime",
+  "target_opset": 15,
+  "classes": [
+    "benefit",
+    "comparison",
+    "definition",
+    "example",
+    "problem",
+    "process",
+    "solution",
+    "statistic"
+  ],
+  "input_names": [
+    "input"
+  ],
+  "output_names": [
+    "label",
+    "probabilities"
+  ],
+  "generated_at": "2026-06-23T20:07:37+00:00"
+}

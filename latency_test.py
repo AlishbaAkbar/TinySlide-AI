@@ -1,7 +1,7 @@
-import joblib
 import time
+from slide_classifier import load_classifier
 
-model = joblib.load("slide_classifier.pkl")
+model = load_classifier()
 
 sample_text = "The system reduces manual effort and saves time."
 
@@ -17,5 +17,6 @@ average_latency_ms = average_latency * 1000
 
 print("TinySlide AI Latency Test")
 print("=========================")
+print(f"Backend: {model.backend}")
 print(f"Average Prediction Latency: {average_latency_ms:.4f} ms")
 print(f"Requirement: < 2000 ms")

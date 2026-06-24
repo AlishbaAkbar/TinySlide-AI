@@ -1,4 +1,6 @@
+import argparse
 import csv
+import os
 import random
 
 classes = {
@@ -86,12 +88,25 @@ for label, templates in classes.items():
 
         rows.append([text, label])
 
+parser = argparse.ArgumentParser(description="Generate the TinySlide AI dataset.")
+parser.add_argument(
+    "--output",
+    default="dataset/slide_training_data.csv",
+    help="CSV output path for generated training rows.",
+)
+args = parser.parse_args()
+
 random.shuffle(rows)
 
-with open("slide_training_data.csv", "w", newline="", encoding="utf-8") as file:
+output_dir = os.path.dirname(args.output)
+if output_dir:
+    os.makedirs(output_dir, exist_ok=True)
+
+with open(args.output, "w", newline="", encoding="utf-8") as file:
     writer = csv.writer(file)
     writer.writerow(["text", "label"])
     writer.writerows(rows)
 
 print("Dataset generated successfully!")
 print("Total rows:", len(rows))
+print("Output:", args.output)

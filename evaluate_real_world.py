@@ -1,7 +1,7 @@
 import pandas as pd
-import joblib
+from slide_classifier import load_classifier
 
-model = joblib.load("slide_classifier.pkl")
+model = load_classifier()
 
 df = pd.read_csv("real_world_test.csv")
 

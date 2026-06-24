@@ -1,3 +1,4 @@
+import argparse
 import pandas as pd
 import joblib
 import os
@@ -11,7 +12,30 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 
 
-df = pd.read_csv("dataset/slide_training_data.csv")
+DATASET_PATH = "dataset/slide_training_data.csv"
+PICKLE_MODEL_PATH = "slide_classifier.pkl"
+
+
+parser = argparse.ArgumentParser(description="Train the TinySlide AI classifier.")
+parser.add_argument(
+    "--dataset",
+    default=DATASET_PATH,
+    help="Path to the training CSV with text and label columns.",
+)
+parser.add_argument(
+    "--model-output",
+    default=PICKLE_MODEL_PATH,
+    help="Path where the trained pickle model should be written.",
+)
+parser.add_argument(
+    "--export-onnx",
+    action="store_true",
+    help="Export models/slide_classifier.onnx after training.",
+)
+args = parser.parse_args()
+
+
+df = pd.read_csv(args.dataset)
 
 X = df["text"]
 y = df["label"]
@@ -54,14 +78,19 @@ with open("model_evaluation_report.txt", "w") as file:
     file.write("Classification Report:\n")
     file.write(report)
 
-joblib.dump(model, "slide_classifier.pkl")
+joblib.dump(model, args.model_output)
 
-print("\nModel saved as slide_classifier.pkl")
+print(f"\nModel saved as {args.model_output}")
 
 
-size_mb = os.path.getsize("slide_classifier.pkl") / (1024 * 1024)
+size_mb = os.path.getsize(args.model_output) / (1024 * 1024)
 
 print(f"\nModel Size: {size_mb:.4f} MB")
 training_time = time.time() - start_time
 
 print(f"Training Time: {training_time:.2f} seconds")
+
+if args.export_onnx:
+    from export_onnx import export_onnx_model
+
+    export_onnx_model(pickle_model_path=args.model_output)
