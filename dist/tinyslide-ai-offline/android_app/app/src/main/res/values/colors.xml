@@ -1,0 +1,5 @@
+<resources>
+    <color name="tinyslide_primary">#1F6FEB</color>
+    <color name="tinyslide_background">#F7F9FC</color>
+    <color name="tinyslide_text">#1F2328</color>
+</resources>

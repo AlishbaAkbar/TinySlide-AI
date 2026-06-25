@@ -1,0 +1,41 @@
+TinySlide AI Offline Bundle
+===========================
+
+Included files:
+- OFFLINE_DEPLOYMENT.md
+- README.md
+- android_app\app\build.gradle
+- android_app\app\src\main\AndroidManifest.xml
+- android_app\app\src\main\assets\slide_classifier.metadata.json
+- android_app\app\src\main\assets\slide_classifier.onnx
+- android_app\app\src\main\java\com\tinyslide\offline\MainActivity.java
+- android_app\app\src\main\java\com\tinyslide\offline\TinySlideEngine.java
+- android_app\app\src\main\res\values\colors.xml
+- android_app\app\src\main\res\values\styles.xml
+- android_app\build.gradle
+- android_app\settings.gradle
+- app.py
+- dataset\slide_training_data.csv
+- deploy\build_android_apk.ps1
+- deploy\predict_once.py
+- deploy\run_app.ps1
+- deploy\run_app.sh
+- evaluate_real_world.py
+- export_onnx.py
+- generate_dataset.py
+- latency_test.py
+- model_evaluation_report.txt
+- models\README.md
+- models\slide_classifier.metadata.json
+- models\slide_classifier.onnx
+- prepare_android_assets.py
+- real_world_test.csv
+- requirements-export.txt
+- requirements-offline.txt
+- requirements-runtime.txt
+- requirements.txt
+- samples\sample_input.txt
+- slide_classifier.pkl
+- slide_classifier.py
+- test_model.py
+- train_model.py

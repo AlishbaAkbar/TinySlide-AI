@@ -1,11 +1,26 @@
+# Android build files
+.gradle/
+build/
+*/build/
+
+# Android Studio
+.idea/
+*.iml
+
+# Keystore / signing files
+*.jks
+*.keystore
+key.properties
+
+# Python cache
 __pycache__/
-.pytest_cache/
+*.pyc
+
+# Environment files
+.env
 .venv/
 venv/
-dist/
-wheelhouse/
-*.pyc
-android_app/.gradle/
-android_app/local.properties
-android_app/app/build/
-android_app/build/
+
+# Large/temp files
+*.zip
+*.rar

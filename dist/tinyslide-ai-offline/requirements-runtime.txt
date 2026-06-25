@@ -1,0 +1,6 @@
+joblib
+numpy
+onnxruntime
+python-pptx
+scikit-learn
+streamlit
